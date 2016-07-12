@@ -1,0 +1,38 @@
+extends layout
+
+block content
+	h1 Instagram feed
+
+	div(class="instagram")
+
+	script(type="text/javascript").
+		$(document).ready( function() {
+			var auth_id = window.location.hash.split('=')[1];
+			var url = "https://api.instagram.com/v1/locations/2593354/media/recent?access_token="+auth_id;
+			console.log(url);
+
+			$.ajax({
+		        method: "GET",
+		        
+		        url: url,
+
+		        dataType: "jsonp",
+
+		        jsonp: "callback",
+
+		        jsonpCallback: "jsonpcallback",
+
+		        success: function(data) {
+		        console.log(data);
+		        	var output = data.data;
+		        	$.each(output, function( index, value ) {
+		        		$(".instagram").append("<img src='"+value.images.standard_resolution.url+"' class='instagramItem'>");
+
+					});
+		        },
+		        error: function(jqXHR, textStatus, errorThrown) {
+		            $("#log").val($("#log").val() + 'Error\n');
+		        }
+		    });
+		});
+		
